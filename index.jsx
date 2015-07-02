@@ -3,18 +3,19 @@ const ReactPivot = require('react-pivot')
 const jsonist = require('jsonist')
 
 
-const Main = React.createClass({
-
-  getInitialState() {
-    return { rows: [], updatedAt: Date.now() }
-  },
+class Main extends React.Component{
+  constructor(...args) {
+    super(...args);
+    this.state =  { rows: [], updatedAt: Date.now() };
+    this.reduce = this.reduce.bind(this);
+  }
 
   componentWillMount() {
     var url = `${window.location.origin}/data/data.json`
     jsonist.get(url, (err, data) => {
       this.setState({rows: data, updatedAt: Date.now()})
     })
-  },
+  }
 
   render() {
     return (
@@ -29,23 +30,23 @@ const Main = React.createClass({
           calculations={this.calculations} />
       </div>
     )
-  },
+  }
 
-  dimensions: [
+  dimensions = [
     {title: 'First Name', value: 'firstName'}
-  ],
+  ];
 
-  calculations: [
+  calculations = [
     {title: 'Amount', value: 'amountTotal'}
-  ],
+  ];
 
   reduce(row, memo) {
-    memo.amountTotal = memo.amountTotal || 0
-    memo.amountTotal += parseFloat(row.transaction.amount)
+    memo.amountTotal = memo.amountTotal || 0;
+    memo.amountTotal += parseFloat(row.transaction.amount);
   }
-})
+}
 
 React.render(
   <Main />,
   document.body
-)
+);
